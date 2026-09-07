@@ -19,7 +19,11 @@ class ExchangeService
         private readonly FeeCalculator $feeCalculator,
     ) {}
 
-    public function exchange(User $user, string $fromCurrency, string $toCurrency, string $amount): Transaction
+    /**
+     * محاسبه‌ی کامل یک تبدیل ارز، بدون اعمال هیچ تغییری در دیتابیس.
+     * هم توسط preview() و هم توسط exchange() استفاده می‌شود.
+     */
+    private function calculateConversion(string $fromCurrency, string $toCurrency, string $amount): array
     {
         $fromCurrency = strtoupper($fromCurrency);
         $toCurrency = strtoupper($toCurrency);
@@ -28,48 +32,67 @@ class ExchangeService
             throw new SameCurrencyExchangeException();
         }
 
-        return DB::transaction(function () use ($user, $fromCurrency, $toCurrency, $amount) {
-            [$sourceWallet, $destinationWallet] = $this->lockWalletsInOrder($user, $fromCurrency, $toCurrency);
+        $sourceCurrency = Currency::findOrFail($fromCurrency);
+        $sourceAmount = Money::fromDecimal($amount, $fromCurrency, $sourceCurrency->decimal_places);
 
-            $sourceCurrency = Currency::findOrFail($fromCurrency);
-            $sourceAmount = Money::fromDecimal($amount, $fromCurrency, $sourceCurrency->decimal_places);
+        $fee = $this->feeCalculator->calculate($sourceAmount);
+        $amountAfterFee = $sourceAmount->subtract($fee);
 
-            $sourceBalance = Money::fromMinorUnits($sourceWallet->balance_minor, $fromCurrency);
+        $conversion = $this->converter->convert($amountAfterFee, $toCurrency);
 
-            if (! $sourceBalance->isGreaterThanOrEqual($sourceAmount)) {
+        return [
+            'from_currency' => $fromCurrency,
+            'to_currency' => $toCurrency,
+            'source_amount' => $sourceAmount,
+            'fee' => $fee,
+            'exchange_rate' => $conversion['rate'],
+            'destination_amount' => $conversion['amount'],
+        ];
+    }
+
+    public function preview(string $fromCurrency, string $toCurrency, string $amount): array
+    {
+        return $this->calculateConversion($fromCurrency, $toCurrency, $amount);
+    }
+
+    public function exchange(User $user, string $fromCurrency, string $toCurrency, string $amount): Transaction
+    {
+        $calc = $this->calculateConversion($fromCurrency, $toCurrency, $amount);
+
+        return DB::transaction(function () use ($user, $calc) {
+            [$sourceWallet, $destinationWallet] = $this->lockWalletsInOrder(
+                $user,
+                $calc['from_currency'],
+                $calc['to_currency']
+            );
+
+            $sourceBalance = Money::fromMinorUnits($sourceWallet->balance_minor, $calc['from_currency']);
+
+            if (! $sourceBalance->isGreaterThanOrEqual($calc['source_amount'])) {
                 throw new InsufficientBalanceException();
             }
-
-            $fee = $this->feeCalculator->calculate($sourceAmount);
-            $amountAfterFee = $sourceAmount->subtract($fee);
-
-            $conversion = $this->converter->convert($amountAfterFee, $toCurrency);
-            $destinationAmount = $conversion['amount'];
-            $rate = $conversion['rate'];
 
             $transaction = Transaction::create([
                 'user_id' => $user->id,
                 'type' => 'exchange',
-                'from_currency' => $fromCurrency,
-                'to_currency' => $toCurrency,
-                'source_amount_minor' => $sourceAmount->minorUnits,
-                'fee_minor' => $fee->minorUnits,
-                'exchange_rate' => $rate->rate,
-                'destination_amount_minor' => $destinationAmount->minorUnits,
+                'from_currency' => $calc['from_currency'],
+                'to_currency' => $calc['to_currency'],
+                'source_amount_minor' => $calc['source_amount']->minorUnits,
+                'fee_minor' => $calc['fee']->minorUnits,
+                'exchange_rate' => $calc['exchange_rate']->rate,
+                'destination_amount_minor' => $calc['destination_amount']->minorUnits,
                 'status' => 'pending',
-                'exchange_rate_id' => $rate->id,
+                'exchange_rate_id' => $calc['exchange_rate']->id,
             ]);
 
-            // --- Debit source wallet ---
-            $newSourceBalance = $sourceBalance->subtract($sourceAmount);
+            $newSourceBalance = $sourceBalance->subtract($calc['source_amount']);
             $sourceWallet->update([
                 'balance_minor' => $newSourceBalance->minorUnits,
                 'version' => $sourceWallet->version + 1,
             ]);
 
-            // --- Credit destination wallet ---
-            $destBalance = Money::fromMinorUnits($destinationWallet->balance_minor, $toCurrency);
-            $newDestBalance = $destBalance->add($destinationAmount);
+            $destBalance = Money::fromMinorUnits($destinationWallet->balance_minor, $calc['to_currency']);
+            $newDestBalance = $destBalance->add($calc['destination_amount']);
             $destinationWallet->update([
                 'balance_minor' => $newDestBalance->minorUnits,
                 'version' => $destinationWallet->version + 1,
@@ -81,15 +104,11 @@ class ExchangeService
         });
     }
 
-    /**
-     * هر دو Wallet مربوط به کاربر رو قفل می‌کند، همیشه به ترتیب صعودی id
-     * تا از Deadlock بین درخواست‌های همزمان جلوگیری شود.
-     */
     private function lockWalletsInOrder(User $user, string $currencyA, string $currencyB): array
     {
         $wallets = Wallet::where('user_id', $user->id)
             ->whereIn('currency_code', [$currencyA, $currencyB])
-            ->orderBy('id') // ترتیب ثابت و پیش‌بینی‌پذیر برای گرفتن قفل
+            ->orderBy('id')
             ->lockForUpdate()
             ->get()
             ->keyBy('currency_code');

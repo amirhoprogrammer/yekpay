@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\RequestInProgressException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateExchangeRequest;
+use App\Http\Requests\ExchangePreviewRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Services\ExchangeService;
@@ -64,5 +65,27 @@ class ExchangeController extends Controller
 
             throw $e;
         }
+    }
+    public function preview(ExchangePreviewRequest $request)
+    {
+        $result = $this->exchangeService->preview(
+            fromCurrency: $request->validated('from_currency'),
+            toCurrency: $request->validated('to_currency'),
+            amount: $request->validated('amount'),
+        );
+
+        $fromCurrency = \App\Models\Currency::findOrFail($result['from_currency']);
+        $toCurrency = \App\Models\Currency::findOrFail($result['to_currency']);
+
+        return response()->json([
+            'data' => [
+                'from_currency' => $result['from_currency'],
+                'to_currency' => $result['to_currency'],
+                'source_amount' => $result['source_amount']->toDecimalString($fromCurrency->decimal_places),
+                'fee' => $result['fee']->toDecimalString($fromCurrency->decimal_places),
+                'exchange_rate' => (string) $result['exchange_rate']->rate,
+                'destination_amount' => $result['destination_amount']->toDecimalString($toCurrency->decimal_places),
+            ],
+        ]);
     }
 }

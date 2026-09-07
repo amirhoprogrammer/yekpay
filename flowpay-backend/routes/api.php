@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/exchanges', [ExchangeController::class, 'store']);
 });
+Route::post('/exchanges/preview', [ExchangeController::class, 'preview']);
