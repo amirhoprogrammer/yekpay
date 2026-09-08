@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Card, CardBody, CardHeader } from "../../../components/ui/Card";
 import { useAuthStore } from "../../../stores/authStore";
-import type { ApiError } from "../../../types/exchange";
+import type { ApiError } from "../../../types/api";
 
 interface RegisterFormProps {
   onSuccess?: () => void;

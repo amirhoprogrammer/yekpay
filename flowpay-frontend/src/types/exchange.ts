@@ -3,7 +3,7 @@ import type { CurrencyCode } from "./wallet";
 export interface ExchangePreviewRequest {
   from_currency: CurrencyCode;
   to_currency: CurrencyCode;
-  amount: string; // بک‌اند string می‌خواهد
+  amount: string;
 }
 
 export interface ExchangePreviewResponse {
