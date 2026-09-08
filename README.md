@@ -7,22 +7,22 @@ A full-stack multi-currency wallet application with real-time exchange rates, id
 ## Screenshots
 
 ### Sign In
-![Sign In](docs/screenshots/Screenshot 2026-09-08 182006.png)
+![Sign In](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182006.png)
 
 ### Dashboard
-![Dashboard](docs/screenshots/Screenshot 2026-09-08 182023.png)
+![Dashboard](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182023.png)
 
 ### Exchange
-![Exchange](docs/screenshots/Screenshot 2026-09-08 182134.png)
+![Exchange](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182134.png)
 
 ### Transactions
-![Transactions](docs/screenshots/Screenshot 2026-09-08 182324.png)
+![Transactions](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182031.png)
 
 ### Transaction Detail
-![Transaction Detail](docs/screenshots/Screenshot 2026-09-08 182309.png)
+![Transaction Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182309.png)
 
 ### Wallet Detail
-![Wallet Detail](docs/screenshots/Screenshot 2026-09-08 182301.png)
+![Wallet Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182301.png)
 
 ---
 
