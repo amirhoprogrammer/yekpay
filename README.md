@@ -158,7 +158,10 @@ src/
 | AED | UAE Dirham |
 
 ---
+## Run 
+
+with the account in .env.example in flowpay-frontend
 
 ## License
 
-MIT
+Amirhossein Aminegareshi
