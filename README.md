@@ -7,22 +7,22 @@ A full-stack multi-currency wallet application with real-time exchange rates, id
 ## Screenshots
 
 ### Sign In
-![Sign In](docs/screenshots/login.png)
+![Sign In](docs/screenshots/Screenshot 2026-09-08 182006.png)
 
 ### Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](docs/screenshots/Screenshot 2026-09-08 182023.png)
 
 ### Exchange
-![Exchange](docs/screenshots/exchange.png)
+![Exchange](docs/screenshots/Screenshot 2026-09-08 182134.png)
 
 ### Transactions
-![Transactions](docs/screenshots/transactions.png)
+![Transactions](docs/screenshots/Screenshot 2026-09-08 182324.png)
 
 ### Transaction Detail
-![Transaction Detail](docs/screenshots/transaction-detail.png)
+![Transaction Detail](docs/screenshots/Screenshot 2026-09-08 182309.png)
 
 ### Wallet Detail
-![Wallet Detail](docs/screenshots/wallet-detail.png)
+![Wallet Detail](docs/screenshots/Screenshot 2026-09-08 182301.png)
 
 ---
 
