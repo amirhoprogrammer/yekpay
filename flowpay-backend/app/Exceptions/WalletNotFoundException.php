@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class WalletNotFoundException extends Exception
+class WalletNotFoundException extends ApiException
 {
     protected $message = 'Wallet not found for the given currency.';
     protected $code = 404;

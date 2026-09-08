@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class RequestInProgressException extends Exception
+class RequestInProgressException extends ApiException
 {
     protected $message = 'An identical request is already being processed. Please try again shortly.';
     protected $code = 409;

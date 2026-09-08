@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class InsufficientBalanceException extends Exception
+class InsufficientBalanceException extends ApiException
 {
     protected $message = 'Insufficient balance to complete this exchange.';
     protected $code = 422;

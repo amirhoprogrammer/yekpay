@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class ExchangeRateNotFoundException extends Exception
+class ExchangeRateNotFoundException extends ApiException
 {
     protected $message = 'No valid exchange rate found for this currency pair.';
     protected $code = 422;

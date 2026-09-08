@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ExchangeController;
+use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/exchanges', [ExchangeController::class, 'store']);
     Route::post('/exchanges/preview', [ExchangeController::class, 'preview']);
+    
+    Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'show']);
 });

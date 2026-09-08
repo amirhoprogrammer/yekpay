@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class SameCurrencyExchangeException extends Exception
+class SameCurrencyExchangeException extends ApiException
 {
     protected $message = 'Cannot exchange a currency into itself.';
     protected $code = 422;

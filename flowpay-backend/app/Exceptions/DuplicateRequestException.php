@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class DuplicateRequestException extends Exception
+class DuplicateRequestException extends ApiException
 {
     protected $message = 'This Idempotency-Key was already used with a different request body.';
     protected $code = 409;
