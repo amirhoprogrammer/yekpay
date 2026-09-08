@@ -4,6 +4,11 @@ import { Toaster } from "sonner";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ExchangePage } from "./pages/ExchangePage";
+import { DashboardPage } from "./pages/DashboardPage";
+import { WalletDetailPage } from "./pages/WalletDetailPage";
+import { TransactionsPage } from "./pages/TransactionsPage";
+import { TransactionDetailPage } from "./pages/TransactionDetailPage";
+import { AppLayout } from "./components/AppLayout";
 import { useAuthStore } from "./stores/authStore";
 
 function FullScreenSpinner() {
@@ -42,15 +47,20 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
-          path="/exchange"
           element={
             <ProtectedRoute>
-              <ExchangePage />
+              <AppLayout />
             </ProtectedRoute>
           }
-        />
-        <Route path="/" element={<Navigate to="/exchange" replace />} />
-        <Route path="*" element={<Navigate to="/exchange" replace />} />
+        >
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/exchange" element={<ExchangePage />} />
+          <Route path="/wallets/:id" element={<WalletDetailPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/transactions/:id" element={<TransactionDetailPage />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
       <Toaster position="top-center" richColors closeButton />
     </BrowserRouter>

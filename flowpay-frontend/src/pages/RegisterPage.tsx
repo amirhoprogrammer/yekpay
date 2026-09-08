@@ -7,13 +7,13 @@ export function RegisterPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   if (isAuthenticated) {
-    return <Navigate to="/exchange" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
     <div className="flex min-h-svh items-center justify-center px-4 py-10">
       <RegisterForm
-        onSuccess={() => navigate("/exchange", { replace: true })}
+        onSuccess={() => navigate("/dashboard", { replace: true })}
       />
     </div>
   );
