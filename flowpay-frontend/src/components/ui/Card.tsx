@@ -1,44 +1,33 @@
-import type { ReactNode } from "react";
-import { cn } from "../../lib/utils";
+import type { HTMLAttributes } from "react";
+import { cn } from "../../lib/cn";
 
-interface CardProps {
-  children: ReactNode;
-  className?: string;
-}
-
-export function Card({ children, className }: CardProps) {
+export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-slate-200/80 bg-white shadow-sm",
+        "rounded-2xl border border-slate-200 bg-white shadow-sm",
         className
       )}
-    >
-      {children}
-    </div>
+      {...props}
+    />
   );
 }
 
 export function CardHeader({
-  children,
   className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("border-b border-slate-100 px-5 py-4", className)}>
-      {children}
-    </div>
+    <div
+      className={cn("border-b border-slate-100 px-5 py-4", className)}
+      {...props}
+    />
   );
 }
 
 export function CardBody({
-  children,
   className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return <div className={cn("px-5 py-5", className)}>{children}</div>;
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("px-5 py-5", className)} {...props} />;
 }
