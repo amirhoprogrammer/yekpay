@@ -20,8 +20,8 @@ export function ExchangePage() {
         if (cancelled) return;
         setBalances(
           data.wallets.map((w) => ({
-            currency_code: w.currency_code,
-            available: w.available_balance,
+            currency_code: w.currency.code, // ← اصلاح شد
+            available: w.balance, // ← اصلاح شد
           }))
         );
       } catch (err) {

@@ -68,6 +68,8 @@ export function ExchangeForm({ balances = [], onSuccess }: ExchangeFormProps) {
     setPreviewLoading(true);
     setPreviewError(null);
 
+    let cancelled = false; // ← پرچم لغو
+
     const timer = window.setTimeout(async () => {
       try {
         const data = await previewExchange({
@@ -75,19 +77,59 @@ export function ExchangeForm({ balances = [], onSuccess }: ExchangeFormProps) {
           to_currency: toCurrency,
           amount: String(amount),
         });
+        if (cancelled) return; // ← اگه این افکت قبلاً منسوخ شده، نتیجه رو نادیده بگیر
         setPreview(data);
         setPreviewError(null);
       } catch (err) {
+        if (cancelled) return;
         const apiErr = getApiError(err);
         setPreview(null);
         setPreviewError(apiErr.message);
       } finally {
-        setPreviewLoading(false);
+        if (!cancelled) setPreviewLoading(false);
       }
     }, 400);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      cancelled = true; // ← وقتی افکت جدید اجرا میشه، این قبلی رو Cancel کن
+      window.clearTimeout(timer);
+    };
   }, [fromCurrency, toCurrency, amountInput]);
+  //useEffect(() => {
+  //  const amount = parseAmountInput(amountInput);
+  //  if (!amount || fromCurrency === toCurrency) {
+  //    setPreview(null);
+  //    setPreviewError(
+  //      fromCurrency === toCurrency
+  //        ? "Source and destination currency must be different."
+  //        : null
+  //    );
+  //    return;
+  //  }
+
+  //  setPreviewLoading(true);
+  //  setPreviewError(null);
+
+  //  const timer = window.setTimeout(async () => {
+  //    try {
+  //      const data = await previewExchange({
+  //        from_currency: fromCurrency,
+  //        to_currency: toCurrency,
+  //        amount: String(amount),
+  //      });
+  //      setPreview(data);
+  //      setPreviewError(null);
+  //    } catch (err) {
+  //      const apiErr = getApiError(err);
+  //      setPreview(null);
+  //      setPreviewError(apiErr.message);
+  //    } finally {
+  //      setPreviewLoading(false);
+  //    }
+  //  }, 400);
+
+  //  return () => window.clearTimeout(timer);
+  //}, [fromCurrency, toCurrency, amountInput]);
 
   const swapCurrencies = () => {
     setFromCurrency(toCurrency);
@@ -98,7 +140,6 @@ export function ExchangeForm({ balances = [], onSuccess }: ExchangeFormProps) {
   const handleOpenConfirm = () => {
     if (!preview) return;
     setConfirmError(null);
-    resetIdempotencyKey();
     setConfirmOpen(true);
   };
 

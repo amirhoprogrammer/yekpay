@@ -10,6 +10,7 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isHydrating: boolean;
   setSession: (user: User, token: string) => void;
   clearSession: () => void;
   login: (email: string, password: string) => Promise<void>;
@@ -26,8 +27,11 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: localStorage.getItem(TOKEN_KEY),
-  isAuthenticated: !!localStorage.getItem(TOKEN_KEY),
+  // مهم: تا وقتی hydrate() واقعاً از سرور تأیید نکرده، فرض می‌کنیم احراز هویت نشده،
+  // حتی اگه یک Token قدیمی در localStorage باشه (ممکنه منقضی/باطل شده باشه).
+  isAuthenticated: false,
   isLoading: false,
+  isHydrating: true,
 
   setSession: (user, token) => {
     localStorage.setItem(TOKEN_KEY, token);
@@ -72,7 +76,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       await authApi.logout();
     } catch {
-      // ignore network errors on logout
+      // خطای شبکه در Logout را نادیده می‌گیریم؛ در هر صورت Session محلی پاک می‌شود
     } finally {
       get().clearSession();
     }
@@ -80,10 +84,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   hydrate: async () => {
     const token = localStorage.getItem(TOKEN_KEY);
+
     if (!token) {
-      set({ user: null, token: null, isAuthenticated: false });
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        isHydrating: false,
+      });
       return;
     }
+
     set({ isLoading: true });
     try {
       const user = await authApi.fetchMe();
@@ -91,7 +102,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch {
       get().clearSession();
     } finally {
-      set({ isLoading: false });
+      set({ isLoading: false, isHydrating: false });
     }
   },
 }));

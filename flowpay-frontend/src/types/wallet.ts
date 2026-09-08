@@ -4,21 +4,29 @@ export interface Currency {
   code: CurrencyCode;
   name: string;
   decimal_places: number;
-  symbol: string;
 }
 
 export interface Wallet {
   id: number;
-  currency_code: CurrencyCode;
+  currency: Currency;
   balance_minor: number;
-  available_balance: string;
-  transactions_count?: number;
+  balance: string;
+  balance_formatted: string;
+  updated_at: string;
 }
 
-export interface WalletListResponse {
+export interface TotalBalance {
+  amount_minor: number;
+  currency: CurrencyCode;
+  formatted: string;
+}
+
+export interface WalletListData {
   wallets: Wallet[];
-  total_balance: {
-    amount: string;
-    currency: CurrencyCode;
-  };
+  total_balance: TotalBalance;
+}
+
+// این اینترفیس دقیقاً شکل خام پاسخ HTTP را نشان می‌دهد (شامل Wrapper بیرونی "data")
+export interface WalletListResponse {
+  data: WalletListData;
 }

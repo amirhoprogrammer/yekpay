@@ -6,6 +6,14 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { ExchangePage } from "./pages/ExchangePage";
 import { useAuthStore } from "./stores/authStore";
 
+function FullScreenSpinner() {
+  return (
+    <div className="flex min-h-svh items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-brand-600" />
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   if (!isAuthenticated) {
@@ -16,10 +24,17 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   const hydrate = useAuthStore((s) => s.hydrate);
+  const isHydrating = useAuthStore((s) => s.isHydrating);
 
   useEffect(() => {
     void hydrate();
   }, [hydrate]);
+
+  // تا وقتی مشخص نشده Token واقعاً معتبره یا نه، هیچ صفحه‌ای (نه Login نه Exchange)
+  // را Render/Redirect نمی‌کنیم — از پرش (Flash) نادرست بین صفحات جلوگیری می‌کند.
+  if (isHydrating) {
+    return <FullScreenSpinner />;
+  }
 
   return (
     <BrowserRouter>

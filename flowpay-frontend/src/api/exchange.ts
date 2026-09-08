@@ -24,15 +24,10 @@ export async function createExchange(
   payload: CreateExchangeRequest,
   idempotencyKey: string
 ): Promise<ExchangeTransaction> {
-  const { data } = await apiClient.post<
-    DataWrapper<ExchangeTransaction> | ExchangeTransaction
-  >("/exchanges", payload, {
-    headers: {
-      "Idempotency-Key": idempotencyKey,
-    },
-  });
-  if (data && typeof data === "object" && "data" in data) {
-    return (data as DataWrapper<ExchangeTransaction>).data;
-  }
-  return data as ExchangeTransaction;
+  const { data } = await apiClient.post<DataWrapper<ExchangeTransaction>>(
+    "/exchanges",
+    payload,
+    { headers: { "Idempotency-Key": idempotencyKey } }
+  );
+  return data.data;
 }

@@ -1,7 +1,7 @@
 import { apiClient } from "./client";
-import type { WalletListResponse } from "../types/wallet";
+import type { WalletListData, WalletListResponse } from "../types/wallet";
 
-export async function fetchWallets(): Promise<WalletListResponse> {
+export async function fetchWallets(): Promise<WalletListData> {
   const { data } = await apiClient.get<WalletListResponse>("/wallets");
-  return data;
+  return data.data; // یک‌بار Unwrap: Axios response → {data: {...}} → {...}
 }
