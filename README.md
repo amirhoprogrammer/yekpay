@@ -12,13 +12,8 @@
 
 حالا بذارید معماری کلی و ساختار دیتابیس رو نشونتون بدم:
 
-![database_1]
-
-( https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182803.png)
-
-![database_2]
-
-( https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182812.png)
+![database_1]( https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182803.png)
+![database_2]( https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182812.png)
 
 چند نکته کلیدی درباره این طراحی:
 
@@ -181,7 +176,7 @@ frontend/
 نکته معماری: منطق مالی (Lock گرفتن، محاسبه‌ی Fee، Rollback) داخل Controller نیست — همه توی ExchangeService هست. Controller فقط Validate می‌کنه، Service صدا می‌زنه، و Resource برمی‌گردونه. این باعث می‌شه تست‌نویسی روی منطق مالی بدون نیاز به HTTP request ساده باشه.
 
 ## لیست دقیق API
-
+![Api_list](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20114052.png)
 ## نکات طراحی API
 
 چرا POST /api/exchanges به جای دو مرحله (preview + confirm) جدا نیست؟
@@ -306,28 +301,19 @@ Table: idempotency_keys -> create_ idempotency_keys
 چون هدف Idempotency اینه که اگه Request تکراری اومد، دقیقاً همون پاسخ اولی (با همون Status Code و همون Body) برگرده — نه اینکه دوباره منطق Exchange اجرا بشه یا پاسخ متفاوتی بسازیم.
 
 ## حالا در مدل user تغییر میدیم
-
-<?php
-
+{<?php
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 use Illuminate\Notifications\Notifiable;
-
 use Laravel\Sanctum\HasApiTokens;
-
 class User extends Authenticatable
-
 {
-
 use HasApiTokens, HasFactory, Notifiable;
+ بقیه‌ی فایل بدون تغییر
+}}
 
-// ... بقیه‌ی فایل بدون تغییر
 
-}
 
 این Trait به مدل User متدهایی مثل createToken() می‌ده که در AuthController برای صدور Token بعد از Login/Register استفاده می‌کنیم.
 
@@ -747,6 +733,8 @@ Wallet: برعکس، نمی‌خوایم موجودی Walletهای موجود ر
 چون ExchangeRateSeeder به وجود currencies نیاز داره (Foreign Key)، و UserSeeder هم به currencies (برای ساخت Wallet) نیاز داره — پس باید همیشه بعد از CurrencySeeder اجرا بشن.
 
 تست انجام دادم با curl بعد هم تست خودکار می سازیم
+
+
 
 ## Screenshots
 
