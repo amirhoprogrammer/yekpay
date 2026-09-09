@@ -34,9 +34,6 @@ function App() {
   useEffect(() => {
     void hydrate();
   }, [hydrate]);
-
-  // تا وقتی مشخص نشده Token واقعاً معتبره یا نه، هیچ صفحه‌ای (نه Login نه Exchange)
-  // را Render/Redirect نمی‌کنیم — از پرش (Flash) نادرست بین صفحات جلوگیری می‌کند.
   if (isHydrating) {
     return <FullScreenSpinner />;
   }

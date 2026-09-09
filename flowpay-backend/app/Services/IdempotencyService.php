@@ -10,17 +10,6 @@ use Illuminate\Database\QueryException;
 
 class IdempotencyService
 {
-    /**
-     * تلاش می‌کند یک "جای‌نگه‌دار" (Placeholder) برای این درخواست بسازد.
-     *
-     * - اگر ساخت موفق بود، یعنی این اولین بار است که این کلید دیده می‌شود؛
-     *   Controller باید ادامه دهد و منطق اصلی را اجرا کند.
-     * - اگر رکوردی با همین کلید و همین Payload از قبل با پاسخ نهایی وجود دارد،
-     *   همان رکورد را برمی‌گرداند تا Controller پاسخ Cache‌شده را برگرداند.
-     * - اگر رکوردی با همین کلید هنوز در حال پردازش است (response_status = 0)،
-     *   RequestInProgressException پرتاب می‌شود.
-     * - اگر همان کلید با Payload متفاوت دیده شود، DuplicateRequestException پرتاب می‌شود.
-     */
     public function begin(User $user, string $key, array $payload): IdempotencyKey
     {
         $hash = $this->hashPayload($payload);

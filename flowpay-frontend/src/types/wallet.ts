@@ -26,7 +26,6 @@ export interface WalletListData {
   total_balance: TotalBalance;
 }
 
-// این اینترفیس دقیقاً شکل خام پاسخ HTTP را نشان می‌دهد (شامل Wrapper بیرونی "data")
 export interface WalletListResponse {
   data: WalletListData;
 }

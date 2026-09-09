@@ -20,7 +20,6 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // برای هر ارز فعال، اگه Wallet نداره یکی با موجودی اولیه بساز
         $initialBalances = [
             'USD' => 100000, // 1000.00
             'EUR' => 0,

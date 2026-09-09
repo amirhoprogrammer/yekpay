@@ -31,11 +31,6 @@ class ExchangeRate extends Model
     {
         return $this->belongsTo(Currency::class, 'quote_currency', 'code');
     }
-
-    /**
-     * آخرین نرخ معتبر بین دو ارز رو برمی‌گردونه.
-     * این متد بعداً در CurrencyConverter/ExchangeService استفاده می‌شه.
-     */
     public static function latestRate(string $base, string $quote): ?self
     {
         return static::where('base_currency', strtoupper($base))

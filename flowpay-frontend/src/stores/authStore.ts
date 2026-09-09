@@ -27,8 +27,6 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: localStorage.getItem(TOKEN_KEY),
-  // مهم: تا وقتی hydrate() واقعاً از سرور تأیید نکرده، فرض می‌کنیم احراز هویت نشده،
-  // حتی اگه یک Token قدیمی در localStorage باشه (ممکنه منقضی/باطل شده باشه).
   isAuthenticated: false,
   isLoading: false,
   isHydrating: true,

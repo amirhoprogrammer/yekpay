@@ -3,5 +3,5 @@ import type { WalletListData, WalletListResponse } from "../types/wallet";
 
 export async function fetchWallets(): Promise<WalletListData> {
   const { data } = await apiClient.get<WalletListResponse>("/wallets");
-  return data.data; // یک‌بار Unwrap: Axios response → {data: {...}} → {...}
+  return data.data;
 }

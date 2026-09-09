@@ -19,10 +19,6 @@ class WalletController extends Controller
         private readonly CurrencyConverter $currencyConverter,
     ) {}
 
-    /**
-     * GET /api/wallets
-     * لیست کیف‌پول‌ها + Total Balance به ارز پایه
-     */
     public function index(Request $request): JsonResponse
     {
         $wallets = Wallet::with('currency')
@@ -46,9 +42,6 @@ class WalletController extends Controller
         ]);
     }
 
-    /**
-     * GET /api/wallets/{wallet}
-     */
     public function show(Request $request, Wallet $wallet): JsonResponse
     {
         $this->authorize('view', $wallet);
@@ -60,9 +53,6 @@ class WalletController extends Controller
     ]);
     }
 
-    /**
-     * جمع موجودی همه‌ی Walletها را به ارز پایه (USD) محاسبه می‌کند.
-     */
     private function calculateTotalBalance($wallets): int
     {
         $totalMinor = 0;

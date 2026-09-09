@@ -5,10 +5,6 @@ import type {
   TransactionListResponse,
 } from "../types/transaction";
 
-//interface DataWrapper<T> {
-//  data: T;
-//}
-
 export async function fetchTransactions(
   filters: TransactionFilters = {}
 ): Promise<TransactionListResponse> {

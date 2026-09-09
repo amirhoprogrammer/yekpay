@@ -68,7 +68,7 @@ export function ExchangeForm({ balances = [], onSuccess }: ExchangeFormProps) {
     setPreviewLoading(true);
     setPreviewError(null);
 
-    let cancelled = false; // ← پرچم لغو
+    let cancelled = false;
 
     const timer = window.setTimeout(async () => {
       try {
@@ -77,7 +77,7 @@ export function ExchangeForm({ balances = [], onSuccess }: ExchangeFormProps) {
           to_currency: toCurrency,
           amount: String(amount),
         });
-        if (cancelled) return; // ← اگه این افکت قبلاً منسوخ شده، نتیجه رو نادیده بگیر
+        if (cancelled) return;
         setPreview(data);
         setPreviewError(null);
       } catch (err) {
@@ -91,45 +91,10 @@ export function ExchangeForm({ balances = [], onSuccess }: ExchangeFormProps) {
     }, 400);
 
     return () => {
-      cancelled = true; // ← وقتی افکت جدید اجرا میشه، این قبلی رو Cancel کن
+      cancelled = true;
       window.clearTimeout(timer);
     };
   }, [fromCurrency, toCurrency, amountInput]);
-  //useEffect(() => {
-  //  const amount = parseAmountInput(amountInput);
-  //  if (!amount || fromCurrency === toCurrency) {
-  //    setPreview(null);
-  //    setPreviewError(
-  //      fromCurrency === toCurrency
-  //        ? "Source and destination currency must be different."
-  //        : null
-  //    );
-  //    return;
-  //  }
-
-  //  setPreviewLoading(true);
-  //  setPreviewError(null);
-
-  //  const timer = window.setTimeout(async () => {
-  //    try {
-  //      const data = await previewExchange({
-  //        from_currency: fromCurrency,
-  //        to_currency: toCurrency,
-  //        amount: String(amount),
-  //      });
-  //      setPreview(data);
-  //      setPreviewError(null);
-  //    } catch (err) {
-  //      const apiErr = getApiError(err);
-  //      setPreview(null);
-  //      setPreviewError(apiErr.message);
-  //    } finally {
-  //      setPreviewLoading(false);
-  //    }
-  //  }, 400);
-
-  //  return () => window.clearTimeout(timer);
-  //}, [fromCurrency, toCurrency, amountInput]);
 
   const swapCurrencies = () => {
     setFromCurrency(toCurrency);

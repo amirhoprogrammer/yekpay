@@ -11,11 +11,6 @@ class ExchangeRateSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    /**
-     * نرخ هر ارز نسبت به USD (Pivot).
-     * فقط این مقادیر دستی وارد می‌شوند؛ همه‌ی نرخ‌های دیگر (از جمله
-     * بین دو ارز غیر از USD) از همین‌جا محاسبه می‌شوند.
-     */
     private const RATES_FROM_USD = [
         'EUR' => '0.9200000000',
         'GBP' => '0.7900000000',

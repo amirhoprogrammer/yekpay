@@ -36,7 +36,6 @@ class ExchangeController extends Controller
 
         $record = $this->idempotencyService->begin($user, $idempotencyKey, $payload);
 
-        // اگر رکورد از قبل کامل شده بود (نه در حال پردازش)، پاسخ Cache‌شده را برگردان
         if (! $record->wasRecentlyCreated) {
             return response(
                 $record->response_body,

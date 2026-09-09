@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // ۱. Exceptionهای اختصاصی خودمان (ApiException و فرزندانش)
         $exceptions->renderable(function (\App\Exceptions\ApiException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -27,7 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // ۲. خطاهای Validation (از FormRequest)
         $exceptions->renderable(function (\Illuminate\Validation\ValidationException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -38,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // ۳. عدم احراز هویت (Token نامعتبر/موجود نیست)
+
         $exceptions->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -49,7 +47,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // ۴. عدم دسترسی (خروجی Policyها، مثل $this->authorize())
+        
         $exceptions->renderable(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -60,7 +58,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // ۵. رکورد پیدا نشد (findOrFail، یا Route Model Binding ناموفق)
         $exceptions->renderable(function (\Illuminate\Database\Eloquent\ModelNotFoundException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -71,7 +68,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // ۶. Fallback نهایی: هر خطای پیش‌بینی‌نشده‌ی دیگر (فقط وقتی Debug خاموش است)
         $exceptions->renderable(function (\Throwable $e, $request) {
             if ($request->is('api/*') && ! config('app.debug')) {
                 return response()->json([

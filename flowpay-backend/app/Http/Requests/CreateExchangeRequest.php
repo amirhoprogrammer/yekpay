@@ -12,7 +12,7 @@ class CreateExchangeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Authorization (auth:sanctum) در سطح Route چک می‌شود
+        return true; 
     }
 
     ///**
