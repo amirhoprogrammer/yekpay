@@ -445,22 +445,22 @@ frontend/
 ## Screenshots
 
 ### Sign In
-![Sign In](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182006.png)
+![Sign In](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161352.png)
 
 ### Dashboard
-![Dashboard](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182023.png)
+![Dashboard](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161415.png)
 
 ### Exchange
-![Exchange](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182134.png)
+![Exchange](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161632.png)
 
 ### Transactions
-![Transactions](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182031.png)
+![Transactions](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161448.png)
 
 ### Transaction Detail
-![Transaction Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182309.png)
+![Transaction Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161521.png)
 
 ### Wallet Detail
-![Wallet Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182301.png)
+![Wallet Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161559.png)
 
 ---
 
