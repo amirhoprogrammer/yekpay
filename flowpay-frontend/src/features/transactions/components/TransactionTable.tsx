@@ -4,7 +4,15 @@ import { Skeleton } from "../../../components/ui/Skeleton";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { Button } from "../../../components/ui/Button";
 import { cn } from "../../../lib/cn";
-import type { Transaction, TransactionListMeta, TransactionType } from "../../../types/transaction";
+import type {
+  Transaction,
+  TransactionListMeta,
+  TransactionType,
+} from "../../../types/transaction";
+import {
+  formatTransactionAmount,
+  formatTransactionSummary,
+} from "../../../lib/money";
 
 interface TransactionTableProps {
   transactions: Transaction[];
@@ -79,23 +87,22 @@ export function TransactionTable({
                 })}
               </p>
             </div>
-            <p
-              className={cn(
-                "text-sm font-semibold tabular-nums",
-                tx.type === "deposit" ? "text-green-600" : "text-slate-900"
-              )}
-            >
-              {tx.type === "deposit" ? "+" : ""}
-              {tx.amount_formatted}
-            </p>
+            <div className="text-right">
+              <p className="text-sm font-medium text-slate-900">
+                {formatTransactionSummary(tx)}
+              </p>
+              <p className="text-sm font-semibold tabular-nums text-slate-900">
+                {formatTransactionAmount(tx)}
+              </p>
+            </div>
             <span
               className={cn(
                 "rounded-full px-2.5 py-0.5 text-xs font-medium capitalize",
                 tx.status === "completed"
                   ? "bg-green-50 text-green-700"
                   : tx.status === "failed"
-                    ? "bg-red-50 text-red-700"
-                    : "bg-amber-50 text-amber-700"
+                  ? "bg-red-50 text-red-700"
+                  : "bg-amber-50 text-amber-700"
               )}
             >
               {tx.status}

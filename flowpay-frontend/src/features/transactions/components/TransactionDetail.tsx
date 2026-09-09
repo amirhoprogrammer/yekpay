@@ -69,8 +69,8 @@ export function TransactionDetail({
               tx.status === "completed"
                 ? "bg-green-50 text-green-700"
                 : tx.status === "failed"
-                  ? "bg-red-50 text-red-700"
-                  : "bg-amber-50 text-amber-700"
+                ? "bg-red-50 text-red-700"
+                : "bg-amber-50 text-amber-700"
             )}
           >
             {tx.status}
@@ -78,15 +78,22 @@ export function TransactionDetail({
         </div>
       </CardHeader>
       <CardBody className="divide-y divide-slate-100">
-        <Row label="ID" value={<span className="font-mono text-xs">{tx.id}</span>} />
-        <Row label="Amount" value={tx.amount_formatted} />
+        <Row
+          label="ID"
+          value={<span className="font-mono text-xs">{tx.id}</span>}
+        />
+
         {tx.type === "exchange" && (
           <>
             <Row
               label="From"
               value={
                 tx.from_currency && tx.source_amount
-                  ? formatMoney(tx.source_amount ?? tx.amount, tx.from_currency, { showCode: true })
+                  ? formatMoney(
+                      tx.source_amount ?? tx.destination_amount,
+                      tx.from_currency,
+                      { showCode: true }
+                    )
                   : tx.from_currency ?? "—"
               }
             />
@@ -94,7 +101,9 @@ export function TransactionDetail({
               label="To"
               value={
                 tx.to_currency && tx.destination_amount
-                  ? formatMoney(tx.destination_amount, tx.to_currency, { showCode: true })
+                  ? formatMoney(tx.destination_amount, tx.to_currency, {
+                      showCode: true,
+                    })
                   : tx.to_currency ?? "—"
               }
             />

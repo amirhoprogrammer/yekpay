@@ -4,6 +4,10 @@ import { Skeleton } from "../../../components/ui/Skeleton";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { cn } from "../../../lib/cn";
 import type { Transaction, TransactionType } from "../../../types/transaction";
+import {
+  formatTransactionAmount,
+  formatTransactionSummary,
+} from "../../../lib/money";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -16,14 +20,7 @@ const typeIcon: Record<TransactionType, React.ReactNode> = {
   exchange: <ArrowRightLeft className="h-4 w-4 text-brand-600" />,
 };
 
-const typeLabel: Record<TransactionType, string> = {
-  deposit: "Deposit",
-  withdrawal: "Withdrawal",
-  exchange: "Exchange",
-};
-
 function TransactionRow({ tx }: { tx: Transaction }) {
-  const isCredit = tx.type === "deposit";
   return (
     <Link
       to={`/transactions/${tx.id}`}
@@ -35,7 +32,7 @@ function TransactionRow({ tx }: { tx: Transaction }) {
         </div>
         <div>
           <p className="text-sm font-medium text-slate-900">
-            {typeLabel[tx.type]}
+            {formatTransactionSummary(tx)}
           </p>
           <p className="text-xs text-slate-400">
             {new Date(tx.created_at).toLocaleDateString("en-US", {
@@ -46,14 +43,8 @@ function TransactionRow({ tx }: { tx: Transaction }) {
         </div>
       </div>
       <div className="text-right">
-        <p
-          className={cn(
-            "text-sm font-semibold tabular-nums",
-            isCredit ? "text-green-600" : "text-slate-900"
-          )}
-        >
-          {isCredit ? "+" : ""}
-          {tx.amount_formatted}
+        <p className="text-sm font-semibold tabular-nums text-green-600">
+          +{formatTransactionAmount(tx)}
         </p>
         <p
           className={cn(
@@ -61,8 +52,8 @@ function TransactionRow({ tx }: { tx: Transaction }) {
             tx.status === "completed"
               ? "text-green-500"
               : tx.status === "failed"
-                ? "text-red-500"
-                : "text-amber-500"
+              ? "text-red-500"
+              : "text-amber-500"
           )}
         >
           {tx.status}

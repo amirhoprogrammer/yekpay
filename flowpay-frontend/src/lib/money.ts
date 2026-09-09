@@ -81,3 +81,20 @@ export function formatMoney(
 
   return `${symbol}${formatted}${code}`.trim();
 }
+
+import type { Transaction } from "../types/transaction";
+
+/**
+ * یک خط خلاصه برای نمایش سریع تراکنش در لیست‌ها (Recent/Table) می‌سازد.
+ * فعلاً همه‌ی تراکنش‌ها از نوع exchange هستند؛ اگر بعداً deposit/withdrawal
+ * واقعاً پیاده‌سازی شوند، این تابع باید بر اساس type شاخه‌بندی شود.
+ */
+export function formatTransactionAmount(tx: Transaction): string {
+  return formatMoney(tx.destination_amount, tx.to_currency, {
+    showCode: true,
+  });
+}
+
+export function formatTransactionSummary(tx: Transaction): string {
+  return `${tx.from_currency} → ${tx.to_currency}`;
+}

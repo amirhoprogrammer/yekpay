@@ -7,27 +7,23 @@ export interface Transaction {
   id: string;
   type: TransactionType;
   status: TransactionStatus;
-  currency: CurrencyCode;
-  amount: string;
-  amount_formatted: string;
-  description: string | null;
+  from_currency: CurrencyCode;
+  to_currency: CurrencyCode;
+  source_amount: string;
+  fee: string;
+  exchange_rate: string;
+  destination_amount: string;
   failure_reason: string | null;
   created_at: string;
-  // exchange-specific fields
-  from_currency?: CurrencyCode;
-  to_currency?: CurrencyCode;
-  source_amount?: string;
-  exchange_rate?: string;
-  fee?: string;
-  destination_amount?: string;
 }
 
 export interface TransactionFilters {
   type?: TransactionType | "";
   status?: TransactionStatus | "";
   currency?: CurrencyCode | "";
-  from_date?: string;
-  to_date?: string;
+  date_from?: string;
+  date_to?: string;
+  search?: string;
   page?: number;
 }
 
