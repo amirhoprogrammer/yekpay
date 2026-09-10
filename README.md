@@ -77,6 +77,8 @@ Visit `http://localhost:5173`, register a new account or log in with the demo us
 
 ### Backend layers
 
+**Stack:** PHP 8.3 · Laravel 13 · Laravel Sanctum · SQLite · Pest
+
 ```
 Controller → FormRequest (validation) → Service (business logic) → Model / Eloquent
 ```
@@ -268,13 +270,6 @@ Documented honestly, as several were explicit time-boxed decisions rather than o
 این فایل مستندات معماری، طراحی دیتابیس، Backend، Frontend، API و روش‌های تست پروژه YekPay را بر اساس مستندات پروژه ارائه می‌کند.
 
 ## معماری و اصول اصلی
-
-برای مدیریت اعداد مالی، بهترین و رایج‌ترین روش (که Stripe و اکثر پلتفرم‌های FinTem استفاده می‌کنن) اینه:
-
-ذخیره به صورت Integer در کوچکترین واحد پول (Minor Units) — یعنی به جای 10000.50 دلار، عدد 1000050 سنت رو ذخیره کنید (BIGINT در MySQL). این کاملاً خطای Floating Point رو حذف می‌کنه چون هیچ عملیات اعشاری روی balance انجام نمی‌گیره. برای هر ارز، تعداد اعشار (decimal_places) رو توی جدول currencies نگه می‌دارید (اکثر ارزها ۲ رقم، بعضی مثل JPY صفر رقم دارن) — این باعث می‌شه اضافه‌کردن ارز جدید فقط یک INSERT باشه، نه تغییر کد.
-
-فقط جایی که واقعاً نیاز به اعشار دارید (ضرب در نرخ تبدیل) از bcmath یا کتابخانه brick/money در PHP استفاده می‌کنید و در نهایت نتیجه رو Round کرده و به Integer برمی‌گردونید — با یک استراتژی Rounding مشخص و مستند (مثلاً Round Half Up در سطح کوچکترین واحد).
-
 حالا بذارید معماری کلی و ساختار دیتابیس رو نشونتون بدم:
 
 ![database_1]( https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-08%20182803.png)
@@ -282,6 +277,10 @@ Documented honestly, as several were explicit time-boxed decisions rather than o
 
 چند نکته کلیدی درباره این طراحی:
 
+- تمام مقادیر پولی به صورت **اعداد صحیح در واحدهای جزئی** (مثلاً سنت) ذخیره می‌شوند تا از خطاهای ممیز شناور جلوگیری شود.
+- محاسبات نرخ ارز با PHP **bcmath** برای دقت کامل انجام می‌شود.
+- **قفل خوش‌بینانه** (ستون `version` در کیف پول‌ها) از خرج کردن دوباره در درخواست‌های همزمان جلوگیری می‌کند.
+- **کلیدهای Idempotency** تضمین می‌کنند که درخواست‌های مبادله دقیقاً یک بار پردازش می‌شوند.
 چرا currencies یک جدول جداست، نه Enum؟
 اضافه‌کردن ارز جدید صرفاً یک ردیف INSERT می‌شه، بدون تغییر در کد یا Migration جدید. این دقیقاً همون چیزیه که تست ازتون می‌خواد ("اضافه‌کردن Currency جدید نیازمند تغییرات اساسی در معماری نباشد").
 
@@ -462,31 +461,6 @@ frontend/
 ### Wallet Detail
 ![Wallet Detail](https://github.com/amirhoprogrammer/yekpay/blob/main/docs/screenshots/Screenshot%202026-09-09%20161559.png)
 
----
-
-## Architecture
-
-```
-flowpay/
-├── flowpay-backend/    # Laravel 13 REST API
-└── flowpay-frontend/   # React 19 + Vite SPA
-```
-
-### Database Schema
-
-6 tables — Users, Wallets, Currencies, Transactions, ExchangeRates, IdempotencyKeys.
-
-- All monetary values stored as **integers in minor units** (e.g. cents) to avoid floating-point errors
-- Exchange rate arithmetic done with PHP **bcmath** for full precision
-- **Optimistic locking** (`version` column on wallets) prevents double-spend on concurrent requests
-- **Idempotency keys** guarantee exchange requests are processed exactly once
-
----
-
-## Backend
-
-**Stack:** PHP 8.3 · Laravel 13 · Laravel Sanctum · SQLite · Pest
-
 ### Setup
 
 ```bash
@@ -557,26 +531,6 @@ npm run dev            # runs on http://localhost:5173
 | `/login` | LoginPage | Email/password sign in |
 | `/register` | RegisterPage | New account creation |
 
-### Project Structure
-
-```
-src/
-├── api/              # Axios API calls (auth, wallets, exchange, transactions)
-├── components/
-│   ├── ui/           # Button, Input, Select, Modal, Card, Skeleton, ErrorState, EmptyState
-│   └── AppLayout.tsx # Navbar + route outlet
-├── features/
-│   ├── auth/         # LoginForm, RegisterForm
-│   ├── dashboard/    # TotalBalance, WalletList, RecentTransactions
-│   ├── exchange/     # ExchangeForm, ExchangePreview, ExchangeConfirmModal
-│   ├── wallets/      # WalletCard, WalletDetail
-│   └── transactions/ # TransactionTable, TransactionFilters, TransactionDetail
-├── hooks/            # useDebounce, useIdempotencyKey
-├── pages/            # Route-level page components
-├── stores/           # Zustand auth store
-└── types/            # TypeScript interfaces (wallet, transaction, exchange, auth)
-```
-
 ### Notable Design Decisions
 
 - **Auth hydration** — on app load, the token is verified against `/api/me` before any redirect, preventing stale-token flicker
@@ -598,7 +552,7 @@ src/
 ---
 ## Run 
 
-with the account in .env.example in flowpay-frontend
+with the account in .env.example 
 
 ## License
 
